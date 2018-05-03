@@ -22,7 +22,7 @@ use pocketmine\tile\Tile;
 class Main extends PluginBase implements Listener{
 
 	//minutes
-	public $spawntime = 5;
+	public $spawntime = 60;
 
 	public function onEnable(){
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
