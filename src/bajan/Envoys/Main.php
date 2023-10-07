@@ -71,7 +71,12 @@ class Main extends PluginBase implements Listener {
     }
 
     public function setEnvoy(Player $sender) {
-        $position = $sender->getPosition();
+    $position = $sender->getPosition();
+    
+    if ($this->envoys === null) {
+        $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
+        }
+
         $this->envoys->set(floor($position->x) . ":" . floor($position->y) . ":" . floor($position->z), $sender->getWorld()->getFolderName());
         $this->envoys->save();
         $itemsList = $this->items->get("Items");
