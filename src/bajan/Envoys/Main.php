@@ -91,9 +91,9 @@ class Main extends PluginBase implements Listener {
                     ->setInt("x", floor($position->x))
                     ->setInt("y", floor($position->y))
                     ->setInt("z", floor($position->z));
-                $chest = Tile::createTile("Chest", $sender->getWorld(), $nbt);
+                $chest = new \pocketmine\block\tile\Chest($sender->getWorld(), $nbt);
                 $world->addTile($chest);
-                $inv = $chest->getInventory();
+                $inv = $chest->getRealInventory();
                 $inv->addItem($itemObj);
                 $sender->sendMessage(TF::GREEN . "Envoy set!");
                 return true;
