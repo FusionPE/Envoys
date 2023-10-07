@@ -1,5 +1,4 @@
 <?php
-
 namespace bajan\Envoys;
 
 use pocketmine\scheduler\Task;
@@ -30,4 +29,3 @@ class CountdownTask extends Task {
         }
     }
 }
-
