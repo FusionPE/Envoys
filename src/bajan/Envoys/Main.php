@@ -18,6 +18,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\world\WorldManager;
+use pocketmine\item\StringToItemParser;
 
 class Main extends PluginBase implements Listener {
 
@@ -51,14 +52,13 @@ class Main extends PluginBase implements Listener {
             $data = explode(":", $data);
             $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
             $i = rand(3, 5);
-        
+
             while ($i > 0) {
                 $itemsList = $this->items->get("Items");
 
                 if (is_array($itemsList)) {
                     foreach ($itemsList as $itemString) {
-                        [$itemTypeId, $itemMeta, $count] = array_map('intval', explode(":", $itemString));
-                        $itemObj = VanillaItems::get($itemTypeId, $itemMeta, $count);
+                        $itemObj = StringToItemParser::parse($itemString);
 
                         if ($itemObj instanceof \pocketmine\item\Item) {
                             if ($tile instanceof \pocketmine\block\tile\Chest) {
@@ -78,23 +78,29 @@ class Main extends PluginBase implements Listener {
         $this->envoys->set($sender->x.":".$sender->y.":".$sender->z, $sender->getWorld()->getName());
         $this->envoys->save();
         $itemsList = $this->items->get("Items");
-        $itemString = $itemsList[array_rand($itemsList)];
-        [$itemTypeId, $itemMeta, $count] = array_map('intval', explode(":", $itemString));
-        $world = $sender->getWorld();
-        $world->setBlock($sender->getPosition()->asVector3(), Block::get(54));
-        $nbt = CompoundTag::create()
-            ->setTag(new ListTag("Items", []))
-            ->setString("id", "Chest")
-            ->setInt("x", $sender->x)
-            ->setInt("y", $sender->y)
-            ->setInt("z", $sender->z);
-        $chest = Tile::createTile("Chest", $sender->getWorld(), $nbt);
-        $world->addTile($chest);
-        $inv = $chest->getInventory();
-        $itemObj = VanillaItems::get($itemTypeId, $itemMeta, $count);
-        $inv->addItem($itemObj);
-        $sender->sendMessage(TF::GREEN."Envoy set!");
-        return true;
+
+        if (is_array($itemsList)) {
+            $itemString = $itemsList[array_rand($itemsList)];
+            $itemObj = StringToItemParser::parse($itemString);
+
+            if ($itemObj instanceof \pocketmine\item\Item) {
+                $world = $sender->getWorld();
+                $world->setBlock($sender->getPosition()->asVector3(), Block::get(54));
+                $nbt = CompoundTag::create()
+                    ->setTag(new ListTag("Items", []))
+                    ->setString("id", "Chest")
+                    ->setInt("x", $sender->x)
+                    ->setInt("y", $sender->y)
+                    ->setInt("z", $sender->z);
+                $chest = Tile::createTile("Chest", $sender->getWorld(), $nbt);
+                $world->addTile($chest);
+                $inv = $chest->getInventory();
+                $inv->addItem($itemObj);
+                $sender->sendMessage(TF::GREEN."Envoy set!");
+                return true;
+            }
+        }
+        return false;
     }
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool {
