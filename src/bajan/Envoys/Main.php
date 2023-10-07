@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace bajan\Envoys;
 
+use pocketmine\block\VanillaBlocks;
+use pocketmine\item\StringToItemParser;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\ListTag;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\utils\Config;
 use pocketmine\player\Player;
-use pocketmine\block\Block;
-use pocketmine\item\VanillaItems;
-use pocketmine\utils\TextFormat as TF;
 use pocketmine\math\Vector3;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\ListTag;
-use pocketmine\nbt\tag\StringTag;
-use pocketmine\world\WorldManager;
-use pocketmine\item\StringToItemParser;
 
 class Main extends PluginBase implements Listener {
 
@@ -50,7 +46,7 @@ class Main extends PluginBase implements Listener {
         $envoyData = $this->envoys->getAll();
         foreach ($envoyData as $data => $world) {
             $data = explode(":", $data);
-            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
             $i = rand(3, 5);
 
             while ($i > 0) {
@@ -88,7 +84,7 @@ class Main extends PluginBase implements Listener {
                 $world = $sender->getWorld();
                 $world->setBlock($position->asVector3(), VanillaBlocks::CHEST()->asBlock());
                 $nbt = CompoundTag::create()
-                    ->setTag(new ListTag("Items", []))
+                    ->setTag("Items", new ListTag([]))
                     ->setString("id", "Chest")
                     ->setInt("x", floor($position->x))
                     ->setInt("y", floor($position->y))
@@ -105,7 +101,7 @@ class Main extends PluginBase implements Listener {
     }
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool {
-        switch ($cmd) {
+        switch ($cmd->getName()) {
             case "setenvoy":
                 if (!$sender->hasPermission("envoy.set")) {
                     $sender->sendMessage(TF::RED . "You do not have the required permission");
