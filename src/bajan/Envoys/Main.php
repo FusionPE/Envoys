@@ -50,15 +50,16 @@ class Main extends PluginBase implements Listener {
     }
     
     public function runEnvoyEvent(): void {
-        foreach ($this->getServer()->getOnlinePlayers() as $players) {
-            $players->sendMessage(TF::AQUA . "WORLD EVENT");
-            $players->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
+        foreach ($this->getServer()->getOnlinePlayers() as $player) {
+            $player->sendMessage(TF::AQUA . "WORLD EVENT");
+            $player->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
         }
 
         $envoyData = $this->getEnvoysConfig()->getAll();
-        foreach ($envoyData as $data => $world) {
-            $data = explode(":", $data);
-            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+        foreach ($envoyData as $envoy) {
+            $coords = explode(":", $envoy["coords"]);
+            $world = $this->getServer()->getWorldManager()->getWorldByName($envoy["world"]);
+            $tile = $world->getTile(new Vector3(intval($coords[0]), intval($coords[1]), intval($coords[2]));
             $i = rand(3, 5);
 
             while ($i > 0) {
