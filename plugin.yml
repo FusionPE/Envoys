@@ -5,7 +5,7 @@ api: [5.0.0]
 author: BajanVlogs
 description: Spawn Envoys In The Warzone For You Players To Collect Items
 
-  permissions:
+permissions:
   envoys.cmd:
     description: Allows players to use the /setenvoy command
     default: op
