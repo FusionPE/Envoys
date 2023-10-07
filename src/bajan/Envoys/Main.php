@@ -30,11 +30,21 @@ class Main extends PluginBase implements Listener {
     private $items;
 
     public function onEnable(): void {
-        $this->getServer()->getPluginManager()->registerEvents($this, $this);
-        $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime * 60 * 20);
-        @mkdir($this->getDataFolder());
-        $this->saveResource("Items.yml");
-        $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
+    $this->getServer()->getPluginManager()->registerEvents($this, $this);
+    $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime * 60 * 20);
+    
+    @mkdir($this->getDataFolder());
+
+    $envoysFile = $this->getDataFolder() . "Envoys.yml";
+    if (!file_exists($envoysFile)) {
+        $envoysData = ["dummy" => "data"];
+        file_put_contents($envoysFile, yaml_emit($envoysData, YAML_UTF8_ENCODING));
+    }
+    
+    $this->envoys = new Config($envoysFile, Config::YAML);
+
+    $this->saveResource("Items.yml");
+    $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
     }
 
     public function runEnvoyEvent(): void {
