@@ -58,7 +58,7 @@ class Main extends PluginBase implements Listener {
 
                 if (is_array($itemsList)) {
                     foreach ($itemsList as $itemString) {
-                        $itemObj = StringToItemParser::parse($itemString);
+                        $itemObj = StringToItemParser::getInstance()->parse($itemString);
 
                         if ($itemObj instanceof \pocketmine\item\Item) {
                             if ($tile instanceof \pocketmine\block\tile\Chest) {
@@ -81,7 +81,7 @@ class Main extends PluginBase implements Listener {
 
         if (is_array($itemsList)) {
             $itemString = $itemsList[array_rand($itemsList)];
-            $itemObj = StringToItemParser::parse($itemString);
+            $itemObj = StringToItemParser::getInstance()->parse($itemString);
 
             if ($itemObj instanceof \pocketmine\item\Item) {
                 $world = $sender->getWorld();
