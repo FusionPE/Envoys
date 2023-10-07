@@ -51,7 +51,7 @@ class Main extends PluginBase implements Listener {
             $data = explode(":", $data);
             $tile = WorldManager::getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
             $i = rand(3, 5);
-            while($i > 0){
+            while ($i > 0) {
                 $item = $this->items->getAll();
                 $item = $item["Items"][array_rand($item["Items"])];
                 $item = explode(":", $item);
@@ -60,7 +60,6 @@ class Main extends PluginBase implements Listener {
                 $i--;
             }
         }
-    }
 
     public function setEnvoy(Player $sender) {
         $this->envoys->set($sender->x.":".$sender->y.":".$sender->z, $sender->getWorld()->getName());
