@@ -43,27 +43,20 @@ class Main extends PluginBase implements Listener {
     }
 
     public function runEnvoyEvent(): void {
-        foreach ($this->getServer()->getOnlinePlayers() as $player) {
-            $player->sendMessage(TF::AQUA . "WORLD EVENT");
-            $player->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
+    $envoyData = $this->envoys->getAll();
+
+    foreach ($envoyData as $data => $world) {
+        $data = explode(":", $data);
+        $worldManager = $this->getServer()->getWorldManager();
+        $targetWorld = $worldManager->getWorldByName($world);
+
+        if ($targetWorld === null) {
+            continue;
         }
 
-        $envoyData = $this->envoys->getAll();
-        foreach ($envoyData as $data => $world) {
-            $data = explode(":", $data);
-            $worldManager = $this->getServer()->getWorldManager();
-            $targetWorld = $worldManager->getWorldByName($world);
+        $chest = Tile::createTile(Tile::CHEST, $targetWorld->getChunkAtPosition(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]))));
 
-            if ($targetWorld === null) {
-                continue;
-            }
-
-            $tile = $targetWorld->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
-
-            if ($tile === null) {
-                continue;
-            }
-
+        if ($chest instanceof \pocketmine\block\tile\Chest) {
             $i = rand(3, 5);
 
             while ($i > 0) {
@@ -74,10 +67,7 @@ class Main extends PluginBase implements Listener {
                         $itemObj = StringToItemParser::getInstance()->parse($itemString);
 
                         if ($itemObj instanceof \pocketmine\item\Item) {
-                            if ($tile instanceof \pocketmine\block\tile\Chest) {
-                                $chest = $tile;
-                                $chest->getInventory()->addItem($itemObj);
-                            }
+                            $chest->getInventory()->addItem($itemObj);
                         }
                     }
                 }
