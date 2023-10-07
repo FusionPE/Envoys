@@ -63,8 +63,7 @@ class Main extends PluginBase implements Listener {
                 $chest = $tile;
 
                 if ($tile instanceof \pocketmine\block\tile\Chest) {
-                $itemTypeId = ItemTypeIds::DIAMOND;
-                $itemObj = new Item($itemTypeId, 0, 1);
+                $itemObj = Item::getTypeId((int)$item[0], (int)$item[1], (int)$item[2]);
                 $chest = $tile;
                 $chest->getInventory()->addItem($itemObj);
                 }
