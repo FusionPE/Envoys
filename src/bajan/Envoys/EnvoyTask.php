@@ -10,7 +10,7 @@ class EnvoyTask extends Task {
 		$this->plugin = $plugin;
 	}
 
-  public function onRun():void {
+  public function onRun() {
 		$this->plugin->runEnvoyEvent();
 		return true;
   }
