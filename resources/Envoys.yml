@@ -1,4 +1,4 @@
-# Envoys.yml
-
-# This is where you can store envoy coordinates and world names.
-# The format should be "envoy1: x:y:z:worldName", "envoy2: x:y:z:worldName", etc.
+envoy1: 100:65:200:world
+envoy2: 300:70:500:world_nether
+envoy3: -50:63:-75:world_the_end
+# You can add more envoys in this format
