@@ -59,12 +59,6 @@ class Main extends PluginBase implements Listener {
         $y = intval($data[1]);
         $z = intval($data[2]);
 
-        $chunk = $targetWorld->getPosition(new Vector3($x, $y, $z));
-
-        if (!$chunk->isGenerated()) {
-            $chunk->generate(true);
-        }
-
         $tile = TileFactory::getInstance()->createFromData($targetWorld, CompoundTag::create()
             ->setInt(Tile::TAG_X, $x)
             ->setInt(Tile::TAG_Y, $y)
@@ -83,7 +77,7 @@ class Main extends PluginBase implements Listener {
 
                         if ($itemObj instanceof \pocketmine\item\Item) {
                             $tile->getInventory()->addItem($itemObj);
-                             }
+                            }
                         }
                     }
 
