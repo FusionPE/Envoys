@@ -41,21 +41,27 @@ class Main extends PluginBase implements Listener {
     }
 
     public function runEnvoyEvent(): void {
-    foreach($this->getServer()->getOnlinePlayers() as $players){
-        $players->sendMessage(TF::AQUA."WORLD EVENT");
-        $players->sendMessage(TF::GREEN."Envoys are being spawned in the warzone!");
+    foreach ($this->getServer()->getOnlinePlayers() as $players) {
+        $players->sendMessage(TF::AQUA . "WORLD EVENT");
+        $players->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
     }
 
     $envoyData = $this->envoys->getAll();
-    foreach($envoyData as $data => $world){
+    foreach ($envoyData as $data => $world) {
         $data = explode(":", $data);
-        $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+        $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
         $i = rand(3, 5);
+        
         while ($i > 0) {
             $item = $this->items->getAll();
             $item = $item["Items"][array_rand($item["Items"])];
             $item = explode(":", $item);
-            $chest->getInventory()->addItem(Item::get($item[0], $item[1], $item[2]));
+
+            $chest = $tile;
+
+            if ($chest !== null) {
+                $chest->getInventory()->addItem(Item::get($item[0], $item[1], $item[2]));
+            }
             $i--;
         }
     }
