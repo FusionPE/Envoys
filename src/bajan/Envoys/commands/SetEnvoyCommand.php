@@ -27,9 +27,44 @@ class SetEnvoyCommand extends Command {
             return true;
         }
 
-        $success = $this->plugin->handleSetEnvoy($sender);
-        if ($success) {
-            $sender->sendMessage(TF::GREEN . "Envoy set!");
+        $position = $sender->getPosition();
+        $coords = floor($position->x) . ":" . floor($position->y) . ":" . floor($position->z);
+        $worldName = $sender->getWorld()->getFolderName();
+
+        $envoyData = $this->plugin->envoys->getAll();
+        $envoyData[$coords] = $worldName;
+        $this->plugin->envoys->setAll($envoyData);
+        $this->plugin->envoys->save();
+
+        $itemsList = $this->plugin->items->get("Items");
+
+        if (is_array($itemsList)) {
+            $itemString = $itemsList[array_rand($itemsList)];
+            $itemObj = StringToItemParser::getInstance()->parse($itemString);
+
+            if ($itemObj instanceof \pocketmine\item\Item) {
+                $world = $sender->getWorld();
+                $nbt = CompoundTag::create()
+                ->setTag("Items", new ListTag([]))
+                ->setString("id", "Chest")
+                ->setInt("x", floor($position->x))
+                ->setInt("y", floor($position->y))
+                ->setInt("z", floor($position->z));
+                $chest = new \pocketmine\block\tile\Chest($world, $nbt);
+                $world->setBlock($position->asVector3(), $chest);
+                $nbt = CompoundTag::create()
+                    ->setTag("Items", new ListTag([]))
+                    ->setString("id", "Chest")
+                    ->setInt("x", floor($position->x))
+                    ->setInt("y", floor($position->y))
+                    ->setInt("z", floor($position->z));
+                $chest = new \pocketmine\block\tile\Chest($sender->getWorld(), $nbt);
+                $world->addTile($chest);
+                $inv = $chest->getRealInventory();
+                $inv->addItem($itemObj);
+                $sender->sendMessage(TF::GREEN . "Envoy set at $coords in world $worldName!");
+                return true;
+            }
         } else {
             $sender->sendMessage(TF::RED . "Error setting envoy.");
         }
