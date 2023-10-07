@@ -12,12 +12,12 @@ use pocketmine\block\Block;
 use pocketmine\item\Item;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\math\Vector3;
-use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\tile\Tile;
+use pocketmine\world\WorldManager;
 
 class Main extends PluginBase implements Listener {
 
@@ -40,54 +40,60 @@ class Main extends PluginBase implements Listener {
         $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
     }
 
-	public function runEnvoyEvent(): void {
-    foreach($this->getServer()->getOnlinePlayers() as $players){
-        $players->sendMessage(TF::AQUA."WORLD EVENT");
-        $players->sendMessage(TF::GREEN."Envoys are being spawned in the warzone!");
+    public function runEnvoyEvent(): void {
+        foreach($this->getServer()->getOnlinePlayers() as $players){
+            $players->sendMessage(TF::AQUA."WORLD EVENT");
+            $players->sendMessage(TF::GREEN."Envoys are being spawned in the warzone!");
+        }
+
+        $envoyData = $this->envoys->getAll();
+        foreach($envoyData as $data => $world){
+            $data = explode(":", $data);
+            $tile = WorldManager::getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
+            $i = rand(3, 5);
+            while($i > 0){
+                $item = $this->items->getAll();
+                $item = $item["Items"][array_rand($item["Items"])];
+                $item = explode(":", $item);
+                $chest = Tile::createTile("Chest", $tile->getWorld(), CompoundTag::create()->setString("id", Tile::CHEST));
+                $chest->getInventory()->addItem(Item::get($item[0], $item[1], $item[2]));
+                $i--;
+            }
+        }
     }
 
-    $envoyData = $this->envoys->getAll();
-    foreach($envoyData as $data => $world){
-        $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
-    $i = rand(3, 5);
-    while($i > 0){
-    $item = $this->items->getAll();
-    $item = $item["Items"][array_rand($item["Items"])];
-    $item = explode(":", $item);
-    $chest = Tile::createTile("Chest", $tile->getWorld(), $tile->getSpawnCompound());
-    $chest->getInventory()->addItem(Item::get($item[0], $item[1], $item[2]));
-    $i--;
+    public function setEnvoy(Player $sender) {
+        $this->envoys->set($sender->x.":".$sender->y.":".$sender->z, $sender->getWorld()->getName());
+        $this->envoys->save();
+        $items = $this->items->get("Items");
+        $item = $items[array_rand($items)];
+        $values = explode(":", $item);
+        $world = $sender->getWorld();
+        $world->setBlock($sender->getPosition()->asVector3(), Block::get(54));
+        $nbt = CompoundTag::create()
+            ->setTag(new ListTag("Items", []))
+            ->setString("id", Tile::CHEST)
+            ->setInt("x", $sender->x)
+            ->setInt("y", $sender->y)
+            ->setInt("z", $sender->z);
+        $chest = Tile::createTile("Chest", $sender->getWorld(), $nbt);
+        $world->addTile($chest);
+        $inv = $chest->getInventory();
+        $inv->addItem(Item::get($values[0], $values[1]));
+        $sender->sendMessage(TF::GREEN."Envoy set!");
+        return true;
     }
-}
-	public function setEnvoy(Player $sender) {
-		$this->envoys->set($sender->x.":".$sender->y.":".$sender->z, $sender->getWorld()->getName());
-		$this->envoys->save();
-		$items = $this->items->get("Items");
-		$item = $items[array_rand($items)];
-		$values = explode(":", $item);
-		$world = $sender->getWorld();
-		$world->setBlock($sender->getPosition()->asVector3(), Block::get(54));
-		$nbt = new CompoundTag(" ", [
-			new ListTag("Items", []),
-			new StringTag("id", Tile::CHEST),
-			new IntTag("x", $sender->x),
-			new IntTag("y", $sender->y),
-			new IntTag("z", $sender->z)
-		]);
-		$chest = Tile::createTile("Chest", $sender->getWorld(), $nbt);
-		$world->addTile($chest);
-		$inv = $chest->getInventory();
-		$inv->addItem(Item::get($values[0], $values[1]));
-		$sender->sendMessage(TF::GREEN."Envoy set!");
-		return true;
-	}
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool {
-		switch($cmd){
-			case "setenvoy":
-				if(!$sender->hasPermission("envoy.set")) {$sender->sendMessage(TF::RED."You do not have the required permission"); return false;}
-				$this->setEnvoy($sender);
-				return true;
-		}
-	}
+        switch($cmd){
+            case "setenvoy":
+                if(!$sender->hasPermission("envoy.set")) {
+                    $sender->sendMessage(TF::RED."You do not have the required permission");
+                    return false;
+                }
+                $this->setEnvoy($sender);
+                return true;
+        }
+        return false;
+    }
 }
