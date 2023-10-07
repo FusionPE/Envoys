@@ -29,13 +29,13 @@ class Main extends PluginBase implements Listener {
     private $envoys;
 
     public function onEnable(): void {
-    $this->getServer()->getPluginManager()->registerEvents($this, $this);
-    $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime * 60 * 20);
-    @mkdir($this->getDataFolder());
-    $this->saveResource("Items.yml");
-    $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
-    $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
-    $this->getServer()->getCommandMap()->register("setenvoy", new SetEnvoyCommand($this));
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime * 60 * 20);
+        @mkdir($this->getDataFolder());
+        $this->saveResource("Items.yml");
+        $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
+        $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
+        $this->getServer()->getCommandMap()->register("setenvoy", new SetEnvoyCommand($this));
     }
         
     public function runEnvoyEvent(): void {
@@ -71,7 +71,7 @@ class Main extends PluginBase implements Listener {
         }
     }
 
-    public function setEnvoy(Player $sender) {
+    public function handleSetEnvoy(Player $sender) {
         $position = $sender->getPosition();
         $coords = floor($position->x) . ":" . floor($position->y) . ":" . floor($position->z);
         $worldName = $sender->getWorld()->getFolderName();
