@@ -37,10 +37,14 @@ class SetEnvoyCommand extends Command {
         $worldName = $sender->getWorld()->getFolderName();
 
         $envoyData = $this->plugin->getEnvoysConfig()->getAll();
-        $envoyData[$coords] = $worldName;
+        $envoyData[] = [
+            "coords" => $coords,
+            "world" => $worldName
+        ];
         $this->plugin->getEnvoysConfig()->setAll($envoyData);
         $this->plugin->getEnvoysConfig()->save();
 
+        // Create a chest tile with items at the specified location
         $itemsList = $this->plugin->getItemsConfig()->get("Items");
 
         if (is_array($itemsList)) {
@@ -73,6 +77,7 @@ class SetEnvoyCommand extends Command {
         } else {
             $sender->sendMessage(TF::RED . "Error setting envoy.");
         }
+
         return true;
     }
 }
