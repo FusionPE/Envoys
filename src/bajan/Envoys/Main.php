@@ -48,34 +48,46 @@ class Main extends PluginBase implements Listener {
     }
 
     public function runEnvoyEvent(): void {
-        foreach ($this->getServer()->getOnlinePlayers() as $players) {
-            $players->sendMessage(TF::AQUA . "WORLD EVENT");
-            $players->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
+    foreach ($this->getServer()->getOnlinePlayers() as $player) {
+        $player->sendMessage(TF::AQUA . "WORLD EVENT");
+        $player->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
+    }
+
+    $envoyData = $this->envoys->getAll();
+    foreach ($envoyData as $data => $world) {
+        $data = explode(":", $data);
+        $worldManager = $this->getServer()->getWorldManager();
+        $targetWorld = $worldManager->getWorldByName($world);
+
+        if ($targetWorld === null) {
+            continue;
         }
 
-        $envoyData = $this->envoys->getAll();
-        foreach ($envoyData as $data => $world) {
-            $data = explode(":", $data);
-            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
-            $i = rand(3, 5);
+        $tile = $targetWorld->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
 
-            while ($i > 0) {
-                $itemsList = $this->items->get("Items");
+        if ($tile === null) {
+            continue;
+        }
 
-                if (is_array($itemsList)) {
-                    foreach ($itemsList as $itemString) {
-                        $itemObj = StringToItemParser::getInstance()->parse($itemString);
+        $i = rand(3, 5);
 
-                        if ($itemObj instanceof \pocketmine\item\Item) {
-                            if ($tile instanceof \pocketmine\block\tile\Chest) {
-                                $chest = $tile;
-                                $chest->getInventory()->addItem($itemObj);
+        while ($i > 0) {
+            $itemsList = $this->items->get("Items");
+
+            if (is_array($itemsList)) {
+                foreach ($itemsList as $itemString) {
+                    $itemObj = StringToItemParser::getInstance()->parse($itemString);
+
+                    if ($itemObj instanceof \pocketmine\item\Item) {
+                        if ($tile instanceof \pocketmine\block\tile\Chest) {
+                            $chest = $tile;
+                            $chest->getInventory()->addItem($itemObj);
                             }
                         }
                     }
                 }
 
-                $i--;
+            $i--;
             }
         }
     }
