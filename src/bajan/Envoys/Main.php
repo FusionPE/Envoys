@@ -28,15 +28,16 @@ class Main extends PluginBase implements Listener {
     public function onEnable(): void {
     $this->getServer()->getPluginManager()->registerEvents($this, $this);
     @mkdir($this->getDataFolder());
+
     $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
     $envoysFile = $this->getDataFolder() . "Envoys.yml";
     $this->envoys = new Config($envoysFile, Config::YAML);
     $this->envoys->reload();
+    
     $spawntime = (int)$this->envoys->get("interval", 60);
     $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $spawntime * 60 * 20);
-    $this->saveResource("Items.yml");
-    $this->saveResource("Envoys.yml");
-       }
+    }
+
 
 
     public function runEnvoyEvent(): void {
