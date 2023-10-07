@@ -38,7 +38,7 @@ class Main extends PluginBase implements Listener {
         $this->saveResource("Envoys.yml");
         $this->saveResource("Items.yml");
         $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
-        $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
+        $this->items = a new Config($this->getDataFolder() . "Items.yml", Config::YAML);
     }
 
     public function runEnvoyEvent(): void {
@@ -50,7 +50,7 @@ class Main extends PluginBase implements Listener {
         $envoyData = $this->envoys->getAll();
         foreach ($envoyData as $data => $world) {
             $data = explode(":", $data);
-            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
             $i = rand(3, 5);
 
             while ($i > 0) {
@@ -86,29 +86,29 @@ class Main extends PluginBase implements Listener {
 
             if ($itemObj instanceof \pocketmine\item\Item) {
                 $world = $sender->getWorld();
-                $world->setBlock($sender->getPosition()->asVector3(), Block::get(54));
+                $world->setBlock($position->asVector3(), Block::get(54));
                 $nbt = CompoundTag::create()
                     ->setTag(new ListTag("Items", []))
                     ->setString("id", "Chest")
-                    ->setInt("x", $sender->x)
-                    ->setInt("y", $sender->y)
-                    ->setInt("z", $sender->z);
+                    ->setInt("x", floor($position->x))
+                    ->setInt("y", floor($position->y))
+                    ->setInt("z", floor($position->z));
                 $chest = Tile::createTile("Chest", $sender->getWorld(), $nbt);
                 $world->addTile($chest);
                 $inv = $chest->getInventory();
                 $inv->addItem($itemObj);
-                $sender->sendMessage(TF::GREEN."Envoy set!");
+                $sender->sendMessage(TF::GREEN . "Envoy set!");
                 return true;
             }
         }
         return false;
     }
 
-    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool {
-        switch($cmd){
+    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool {
+        switch ($cmd) {
             case "setenvoy":
-                if(!$sender->hasPermission("envoy.set")) {
-                    $sender->sendMessage(TF::RED."You do not have the required permission");
+                if (!$sender->hasPermission("envoy.set")) {
+                    $sender->sendMessage(TF::RED . "You do not have the required permission");
                     return false;
                 }
                 $this->setEnvoy($sender);
