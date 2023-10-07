@@ -13,7 +13,7 @@ class EnvoyTask extends Task {
         $this->plugin = $plugin;
     }
 
-    public function onRun(int $currentTick) {
+    public function onRun(int $currentTick): void {
         $this->plugin->runEnvoyEvent();
     }
 }
