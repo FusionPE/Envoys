@@ -11,7 +11,7 @@ class EnvoyTask extends PluginTask {
 		$this->plugin = $plugin;
 	}
 
-  public function onRun(): void {
+  public function onRun($currenttick) {
 		$this->plugin->runEnvoyEvent();
 		return true;
   }
