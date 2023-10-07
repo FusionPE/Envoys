@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace bajan\Envoys\commands;
 
+use pocketmine\player\Player;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat as TF;
