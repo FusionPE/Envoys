@@ -16,7 +16,6 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
-use pocketmine\tile\Tile;
 use pocketmine\world\WorldManager;
 
 class Main extends PluginBase implements Listener {
@@ -59,7 +58,7 @@ class Main extends PluginBase implements Listener {
 
             $chest = $tile;
 
-            if ($tile instanceof \pocketmine\tile\Chest) {
+            if ($tile instanceof \pocketmine\block\tile\Chest) {
     $itemObj = Item::get($item[0]);
     $itemObj->setDamage($item[1]);
     $itemObj->setCount($item[2]);
