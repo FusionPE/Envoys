@@ -10,6 +10,7 @@ use pocketmine\utils\Config;
 use pocketmine\player\Player;
 use pocketmine\block\Block;
 use pocketmine\item\Item;
+use pocketmine\item\VanillaItem;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
@@ -40,35 +41,35 @@ class Main extends PluginBase implements Listener {
     }
 
     public function runEnvoyEvent(): void {
-    foreach ($this->getServer()->getOnlinePlayers() as $players) {
-        $players->sendMessage(TF::AQUA . "WORLD EVENT");
-        $players->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
-    }
+        foreach ($this->getServer()->getOnlinePlayers() as $players) {
+            $players->sendMessage(TF::AQUA . "WORLD EVENT");
+            $players->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
+        }
 
-    $envoyData = $this->envoys->getAll();
-    foreach ($envoyData as $data => $world) {
-        $data = explode(":", $data);
-        $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
-        $i = rand(3, 5);
+        $envoyData = $this->envoys->getAll();
+        foreach ($envoyData as $data => $world) {
+            $data = explode(":", $data);
+            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
+            $i = rand(3, 5);
         
-        while ($i > 0) {
-            $item = $this->items->getAll();
-            $item = $item["Items"][array_rand($item["Items"])];
-            $item = explode(":", $item);
+            while ($i > 0) {
+                $item = $this->items->getAll();
+                $item = $item["Items"][array_rand($item["Items"])];
+                $item = explode(":", $item);
 
-            $chest = $tile;
+                $chest = $tile;
 
-            if ($tile instanceof \pocketmine\block\tile\Chest) {
-    $itemObj = Item::get($item[0]);
-    $itemObj->setDamage($item[1]);
-    $itemObj->setCount($item[2]);
-    $chest = $tile;
-    $chest->getInventory()->addItem($itemObj);
+                if ($tile instanceof \pocketmine\block\tile\Chest) {
+                    $itemObj = VanillaItem::get($item[0]);
+                    $itemObj->setDamage($item[1]);
+                    $itemObj->setCount($item[2]);
+                    $chest = $tile;
+                    $chest->getInventory()->addItem($itemObj);
+                }
+                $i--;
             }
-            $i--;
         }
     }
-}
 
     public function setEnvoy(Player $sender) {
         $this->envoys->set($sender->x.":".$sender->y.":".$sender->z, $sender->getWorld()->getName());
