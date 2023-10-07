@@ -49,13 +49,12 @@ class Main extends PluginBase implements Listener {
     $envoyData = $this->envoys->getAll();
     foreach($envoyData as $data => $world){
         $data = explode(":", $data);
-        $tile = WorldManager::getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+        $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
         $i = rand(3, 5);
         while ($i > 0) {
             $item = $this->items->getAll();
             $item = $item["Items"][array_rand($item["Items"])];
             $item = explode(":", $item);
-            $chest = Tile::createTile("Chest", $tile->getWorld(), CompoundTag::create()->setString("id", Tile::CHEST));
             $chest->getInventory()->addItem(Item::get($item[0], $item[1], $item[2]));
             $i--;
         }
