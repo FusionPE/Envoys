@@ -70,47 +70,4 @@ class Main extends PluginBase implements Listener {
             }
         }
     }
-
-    public function handleSetEnvoy(Player $sender) {
-        $position = $sender->getPosition();
-        $coords = floor($position->x) . ":" . floor($position->y) . ":" . floor($position->z);
-        $worldName = $sender->getWorld()->getFolderName();
-
-        $envoyData = $this->envoys->getAll();
-        $envoyData[$coords] = $worldName;
-        $this->envoys->setAll($envoyData);
-        $this->envoys->save();
-
-        $itemsList = $this->items->get("Items");
-
-        if (is_array($itemsList)) {
-            $itemString = $itemsList[array_rand($itemsList)];
-            $itemObj = StringToItemParser::getInstance()->parse($itemString);
-
-            if ($itemObj instanceof \pocketmine\item\Item) {
-                $world = $sender->getWorld();
-                $nbt = CompoundTag::create()
-                ->setTag("Items", new ListTag([]))
-                ->setString("id", "Chest")
-                ->setInt("x", floor($position->x))
-                ->setInt("y", floor($position->y))
-                ->setInt("z", floor($position->z));
-                $chest = new \pocketmine\block\tile\Chest($world, $nbt);
-                $world->setBlock($position->asVector3(), $chest);
-                $nbt = CompoundTag::create()
-                    ->setTag("Items", new ListTag([]))
-                    ->setString("id", "Chest")
-                    ->setInt("x", floor($position->x))
-                    ->setInt("y", floor($position->y))
-                    ->setInt("z", floor($position->z));
-                $chest = new \pocketmine\block\tile\Chest($sender->getWorld(), $nbt);
-                $world->addTile($chest);
-                $inv = $chest->getRealInventory();
-                $inv->addItem($itemObj);
-                $sender->sendMessage(TF::GREEN . "Envoy set at $coords in world $worldName!");
-                return true;
-            }
-        }
-        return false;
-    }
 }
