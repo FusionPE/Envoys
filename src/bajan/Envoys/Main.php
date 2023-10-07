@@ -13,7 +13,7 @@ use pocketmine\player\Player;
 use pocketmine\block\Block;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItem;
-use pocketmine\item\ItemTypeIds; // Added import for ItemTypeIds
+use pocketmine\item\ItemTypeIds;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
@@ -63,10 +63,10 @@ class Main extends PluginBase implements Listener {
                 $chest = $tile;
 
                 if ($tile instanceof \pocketmine\block\tile\Chest) {
-                    $itemTypeId = (int) $item[0];
-                    $itemObj = new Item($itemTypeId, $item[1], $item[2]); // Use ItemTypeIds to create the item
-                    $chest = $tile;
-                    $chest->getInventory()->addItem($itemObj);
+                $itemTypeId = ItemTypeIds::DIAMOND;
+                $itemObj = new Item($itemTypeId, 0, 1);
+                $chest = $tile;
+                $chest->getInventory()->addItem($itemObj);
                 }
                 $i--;
             }
