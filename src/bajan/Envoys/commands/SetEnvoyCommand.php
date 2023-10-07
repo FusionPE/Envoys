@@ -10,6 +10,7 @@ use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\math\Vector3;
 use pocketmine\block\tile\Chest;
+use pocketmine\block\tile\TileFactory;
 use pocketmine\item\StringToItemParser;
 use pocketmine\item\Item;
 use bajan\Envoys\Main;
@@ -51,7 +52,8 @@ class SetEnvoyCommand extends Command {
 
             if ($itemObj instanceof Item) {
                 $world = $sender->getWorld();
-                $nbt = $world->getTileFactory()->createBaseNBT($coords);
+                $tileFactory = TileFactory::getInstance();
+                $nbt = $tileFactory->createBaseNBT($coords);
                 $chest = Chest::createTile($world, $nbt);
                 $world->addTile($chest);
                 $inv = $chest->getInventory();
