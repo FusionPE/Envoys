@@ -3,16 +3,17 @@ namespace bajan\Envoys;
 
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
+use pocketmine\plugin\Plugin;
 
 class EnvoyTask extends Task {
 
-  public function __construct(Main $plugin) {
-		$this->plugin = $plugin;
-	}
+    private $plugin;
 
-  public function onRun() {
-		$this->plugin->runEnvoyEvent();
-		return true;
-  }
+    public function __construct(Plugin $plugin) {
+        $this->plugin = $plugin;
+    }
 
+    public function onRun(): void {
+        $this->plugin->runEnvoyEvent();
+    }
 }
