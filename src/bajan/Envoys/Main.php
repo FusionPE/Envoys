@@ -49,7 +49,7 @@ class Main extends PluginBase implements Listener {
 
         foreach ($envoyData as $data => $world) {
             $data = explode(":", $data);
-            $targetWorld = $this->getServer()->getWorldManager()->getWorldByName($world);
+            $targetWorld = $this->getServer()->getWorldManager()->getWorldByName($name);
 
             if ($targetWorld === null) {
                 continue;
