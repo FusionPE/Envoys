@@ -32,9 +32,7 @@ class Main extends PluginBase implements Listener {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime * 60 * 20);
         @mkdir($this->getDataFolder());
-        $this->saveResource("Envoys.yml");
         $this->saveResource("Items.yml");
-        $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
         $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
         $this->getServer()->getCommandMap()->register("setenvoy", new SetEnvoyCommand($this));
     }
