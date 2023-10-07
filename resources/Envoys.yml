@@ -1,4 +1,13 @@
-interval: 60
-envoys:
-  "x1:y1:z1": "world1"
-  "x2:y2:z2": "world2"
+# Envoys.yml
+# This file is used to specify the coordinates where envoys will spawn in different worlds.
+
+# The interval in minutes between envoy spawns
+interval: 10
+
+# Define the coordinates for envoy spawns as key-value pairs where the key is the coordinates
+# and the value is the name of the world.
+# Example:
+# "X:Y:Z": "WorldName"
+"100:70:200": "PvP Warzone"
+"150:65:300": "AdventureWorld"
+"80:75:150": "NetherWorld"
