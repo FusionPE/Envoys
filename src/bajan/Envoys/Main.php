@@ -1,6 +1,6 @@
 <?php
 
-namespace klaus\Envoys;
+namespace bajan\Envoys;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
