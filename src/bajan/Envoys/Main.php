@@ -68,11 +68,12 @@ class Main extends PluginBase implements Listener {
 
                         if ($itemObj instanceof \pocketmine\item\Item) {
                             $chest->getInventory()->addItem($itemObj);
+                            }
                         }
                     }
-                }
 
                 $i--;
+                }
             }
         }
     }
