@@ -65,7 +65,11 @@ class Main extends PluginBase implements Listener {
             $chunk->generate(true);
         }
 
-        $tile = TileFactory::createFromData(Tile::CHEST, $targetWorld, CompoundTag::create()->setInt(Tile::TAG_X, $x)->setInt(Tile::TAG_Y, $y)->setInt(Tile::TAG_Z, $z));
+        $tile = TileFactory::getInstance()->createFromData($targetWorld, CompoundTag::create()
+            ->setInt(Tile::TAG_X, $x)
+            ->setInt(Tile::TAG_Y, $y)
+            ->setInt(Tile::TAG_Z, $z)
+        );
 
         if ($tile instanceof \pocketmine\block\tile\Chest) {
             $i = rand(3, 5);
@@ -79,7 +83,7 @@ class Main extends PluginBase implements Listener {
 
                         if ($itemObj instanceof \pocketmine\item\Item) {
                             $tile->getInventory()->addItem($itemObj);
-                            }
+                             }
                         }
                     }
 
