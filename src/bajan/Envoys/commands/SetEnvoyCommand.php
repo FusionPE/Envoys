@@ -20,7 +20,7 @@ class SetEnvoyCommand extends Command {
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
-        if ($sender->hasPermission("envoy.set")) {
+        if ($sender->hasPermission("envoys.cmd")) {
             if ($this->plugin->setEnvoy($sender)) {
                 $sender->sendMessage(TF::GREEN . "Envoy set!");
             } else {
