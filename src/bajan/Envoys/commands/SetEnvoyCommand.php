@@ -26,14 +26,12 @@ class SetEnvoyCommand extends Command {
             $sender->sendMessage("This command can only be used by players.");
             return true;
         }
-            $success = $this->plugin->setEnvoy($sender);
-            if ($success) {
-                $sender->sendMessage(TF::GREEN . "Envoy set!");
-            } else {
-                $sender->sendMessage(TF::RED . "Error setting envoy.");
-            }
-            return true;
+        $success = $this->plugin->setEnvoy($sender);
+        if ($success) {
+            $sender->sendMessage(TF::GREEN . "Envoy set!");
+        } else {
+            $sender->sendMessage(TF::RED . "Error setting envoy.");
         }
-        return false;
+        return true;
     }
 }
