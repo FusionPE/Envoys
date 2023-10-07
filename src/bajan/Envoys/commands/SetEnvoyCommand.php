@@ -22,10 +22,6 @@ class SetEnvoyCommand extends Command {
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
-        if ($sender instanceof Player) {
-            $sender->sendMessage("This command can only be used by players.");
-            return true;
-        }
         $success = $this->plugin->setEnvoy($sender);
         if ($success) {
             $sender->sendMessage(TF::GREEN . "Envoy set!");
@@ -33,5 +29,10 @@ class SetEnvoyCommand extends Command {
             $sender->sendMessage(TF::RED . "Error setting envoy.");
         }
         return true;
+
+        if ($sender instanceof Player) {
+            $sender->sendMessage("This command can only be used by players.");
+            return true;
+        }
     }
 }
