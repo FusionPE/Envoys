@@ -54,7 +54,7 @@ class Main extends PluginBase implements Listener{
 		}
 	}
 
-	public function setEnvoy(Player $sender): void {
+	public function setEnvoy(Player $sender) {
 		$this->envoys->set($sender->x.":".$sender->y.":".$sender->z, $sender->getWorld()->getName());
 		$this->envoys->save();
 		$items = $this->items->get("Items");
