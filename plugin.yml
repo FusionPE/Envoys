@@ -8,3 +8,9 @@ description: Spawn Envoys In The Warzone For You Players To Collect Items
 commands:
  setenvoy:
   description: Set an envoy
+
+  permissions:
+  envoys.cmd:
+    description: Allows players to use the /setenvoy command
+    default: op
+
