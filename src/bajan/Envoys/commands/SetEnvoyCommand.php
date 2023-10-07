@@ -8,6 +8,11 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
+use pocketmine\block\VanillaBlocks;
+use pocketmine\block\tile\Tile;
+use pocketmine\item\StringToItemParser;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\ListTag;
 use bajan\Envoys\Main;
 
 class SetEnvoyCommand extends Command {
