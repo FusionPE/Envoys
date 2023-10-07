@@ -36,12 +36,12 @@ class SetEnvoyCommand extends Command {
         $coords = floor($position->x) . ":" . floor($position->y) . ":" . floor($position->z);
         $worldName = $sender->getWorld()->getFolderName();
 
-        $envoyData = $this->plugin->envoys->getAll();
+        $envoyData = $this->plugin->getEnvoysConfig()->getAll();
         $envoyData[$coords] = $worldName;
-        $this->plugin->envoys->setAll($envoyData);
-        $this->plugin->envoys->save();
+        $this->plugin->getEnvoysConfig()->setAll($envoyData);
+        $this->plugin->getEnvoysConfig()->save();
 
-        $itemsList = $this->plugin->items->get("Items");
+        $itemsList = $this->plugin->getItemsConfig()->get("Items");
 
         if (is_array($itemsList)) {
             $itemString = $itemsList[array_rand($itemsList)];
@@ -50,11 +50,11 @@ class SetEnvoyCommand extends Command {
             if ($itemObj instanceof \pocketmine\item\Item) {
                 $world = $sender->getWorld();
                 $nbt = CompoundTag::create()
-                ->setTag("Items", new ListTag([]))
-                ->setString("id", "Chest")
-                ->setInt("x", floor($position->x))
-                ->setInt("y", floor($position->y))
-                ->setInt("z", floor($position->z));
+                    ->setTag("Items", new ListTag([]))
+                    ->setString("id", "Chest")
+                    ->setInt("x", floor($position->x))
+                    ->setInt("y", floor($position->y))
+                    ->setInt("z", floor($position->z));
                 $chest = new \pocketmine\block\tile\Chest($world, $nbt);
                 $world->setBlock($position->asVector3(), $chest);
                 $nbt = CompoundTag::create()
