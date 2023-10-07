@@ -51,7 +51,7 @@ class SetEnvoyCommand extends Command {
 
             if ($itemObj instanceof Item) {
                 $world = $sender->getWorld();
-                $nbt = Chest::createNBT($coords);
+                $nbt = $world->getTileFactory()->createBaseNBT($coords);
                 $chest = Chest::createTile($world, $nbt);
                 $world->addTile($chest);
                 $inv = $chest->getInventory();
