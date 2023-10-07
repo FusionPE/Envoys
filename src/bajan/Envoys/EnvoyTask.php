@@ -1,5 +1,5 @@
 <?php
-namespace klaus\Envoys;
+namespace bajan\Envoys;
 
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
