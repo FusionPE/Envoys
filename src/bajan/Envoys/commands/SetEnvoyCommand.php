@@ -69,8 +69,6 @@ class SetEnvoyCommand extends Command {
                 $inv->addItem($itemObj);
 
                 $sender->sendMessage(TF::GREEN . "Envoy set at $coords in world $worldName!");
-            } else {
-                $sender->sendMessage(TF::RED . "Error setting envoy.");
             }
         }
 
