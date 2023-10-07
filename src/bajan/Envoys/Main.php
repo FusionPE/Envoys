@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace bajan\Envoys;
 
 use pocketmine\block\VanillaBlocks;
-use pocketmine\block\tile\ChestTile;
+use pocketmine\block\tile\Chest;
 use pocketmine\item\StringToItemParser;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
@@ -91,7 +91,7 @@ class Main extends PluginBase implements Listener {
                     ->setInt("x", floor($position->x))
                     ->setInt("y", floor($position->y))
                     ->setInt("z", floor($position->z));
-                $chest = ChestTile::createChest($sender->getWorld(), $nbt);
+                $chest = Chest::createChest($sender->getWorld(), $nbt);
                 $world->addTile($chest);
                 $inv = $chest->getInventory();
                 $inv->addItem($itemObj);
