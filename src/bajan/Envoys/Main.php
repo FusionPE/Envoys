@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace bajan\Envoys;
 
 use pocketmine\block\VanillaBlocks;
-use pocketmine\block\tile\Chest;
+use pocketmine\block\tile\Tile;
 use pocketmine\item\StringToItemParser;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
@@ -59,7 +59,7 @@ class Main extends PluginBase implements Listener {
                         $itemObj = StringToItemParser::getInstance()->parse($itemString);
 
                         if ($itemObj instanceof \pocketmine\item\Item) {
-                            if ($tile instanceof \pocketmine\block\tile\ChestTile) {
+                            if ($tile instanceof \pocketmine\block\tile\Chest) {
                                 $chest = $tile;
                                 $chest->getInventory()->addItem($itemObj);
                             }
@@ -91,7 +91,7 @@ class Main extends PluginBase implements Listener {
                     ->setInt("x", floor($position->x))
                     ->setInt("y", floor($position->y))
                     ->setInt("z", floor($position->z));
-                $chest = Chest::createChest($sender->getWorld(), $nbt);
+                $chest = Tile::createTile("Chest", $sender->getWorld(), $nbt);
                 $world->addTile($chest);
                 $inv = $chest->getInventory();
                 $inv->addItem($itemObj);
