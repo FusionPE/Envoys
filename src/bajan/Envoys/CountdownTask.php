@@ -4,7 +4,7 @@ namespace bajan\Envoys;
 namespace bajan\Envoys;
 
 use pocketmine\scheduler\Task;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
 
 class CountdownTask extends Task {
@@ -20,7 +20,7 @@ class CountdownTask extends Task {
         $this->message = $message;
     }
 
-    public function onRun(int $currentTick): void {
+    public function onRun(): void {
         if ($this->count <= 0) {
             $this->plugin->runEnvoyEvent($this->player);
         } else {
