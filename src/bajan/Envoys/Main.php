@@ -65,7 +65,7 @@ class Main extends PluginBase implements Listener {
             $chunk->generate(true);
         }
 
-        $tile = TileFactory::createTile(Tile::CHEST, $targetWorld, CompoundTag::create()->setInt(Tile::TAG_X, $x)->setInt(Tile::TAG_Y, $y)->setInt(Tile::TAG_Z, $z));
+        $tile = TileFactory::createFromData(Tile::CHEST, $targetWorld, CompoundTag::create()->setInt(Tile::TAG_X, $x)->setInt(Tile::TAG_Y, $y)->setInt(Tile::TAG_Z, $z));
 
         if ($tile instanceof \pocketmine\block\tile\Chest) {
             $i = rand(3, 5);
