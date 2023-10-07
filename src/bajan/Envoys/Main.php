@@ -23,9 +23,6 @@ class Main extends PluginBase implements Listener {
     public $spawntime = 60;
 
     /** @var Config */
-    private $envoys;
-
-    /** @var Config */
     private $items;
 
     public function onEnable(): void {
