@@ -11,13 +11,10 @@ use pocketmine\command\Command;
 use pocketmine\utils\Config;
 use pocketmine\player\Player;
 use pocketmine\block\Block;
-use pocketmine\item\Item;
-use pocketmine\item\VanillaItem;
-use pocketmine\item\ItemTypeIds;
+use pocketmine\item\VanillaItems;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\world\WorldManager;
@@ -52,21 +49,26 @@ class Main extends PluginBase implements Listener {
         $envoyData = $this->envoys->getAll();
         foreach ($envoyData as $data => $world) {
             $data = explode(":", $data);
-            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
             $i = rand(3, 5);
         
             while ($i > 0) {
-                $item = $this->items->getAll();
-                $item = $item["Items"][array_rand($item["Items"])];
-                $item = explode(":", $item);
+                $itemsList = $this->items->get("Items");
 
-                $chest = $tile;
+                if (is_array($itemsList)) {
+                    foreach ($itemsList as $itemString) {
+                        [$itemTypeId, $itemMeta, $count] = array_map('intval', explode(":", $itemString));
+                        $itemObj = VanillaItems::get($itemTypeId, $itemMeta, $count);
 
-                if ($tile instanceof \pocketmine\block\tile\Chest) {
-                $itemObj = Item::getName((int)$item[0], (int)$item[1], (int)$item[2]);
-                $chest = $tile;
-                $chest->getInventory()->addItem($itemObj);
+                        if ($itemObj instanceof \pocketmine\item\Item) {
+                            if ($tile instanceof \pocketmine\block\tile\Chest) {
+                                $chest = $tile;
+                                $chest->getInventory()->addItem($itemObj);
+                            }
+                        }
+                    }
                 }
+
                 $i--;
             }
         }
@@ -75,9 +77,9 @@ class Main extends PluginBase implements Listener {
     public function setEnvoy(Player $sender) {
         $this->envoys->set($sender->x.":".$sender->y.":".$sender->z, $sender->getWorld()->getName());
         $this->envoys->save();
-        $items = $this->items->get("Items");
-        $item = $items[array_rand($items)];
-        $values = explode(":", $item);
+        $itemsList = $this->items->get("Items");
+        $item = $itemsList[array_rand($itemsList)];
+        [$itemTypeId, $itemMeta, $count] = array_map('intval', explode(":", $item));
         $world = $sender->getWorld();
         $world->setBlock($sender->getPosition()->asVector3(), Block::get(54));
         $nbt = CompoundTag::create()
@@ -89,7 +91,8 @@ class Main extends PluginBase implements Listener {
         $chest = Tile::createTile("Chest", $sender->getWorld(), $nbt);
         $world->addTile($chest);
         $inv = $chest->getInventory();
-        $inv->addItem(Item::get($values[0], $values[1]));
+        $itemObj = VanillaItems::get($itemTypeId, $itemMeta, $count);
+        $inv->addItem($itemObj);
         $sender->sendMessage(TF::GREEN."Envoy set!");
         return true;
     }
