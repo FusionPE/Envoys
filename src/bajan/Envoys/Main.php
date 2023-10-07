@@ -35,8 +35,7 @@ class Main extends PluginBase implements Listener {
     $this->saveResource("Items.yml");
     $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
     $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
-    $this->getServer()->getCommandMap()->register("setenvoy", new SetEnvoyCommand($this, $this->envoys)); // Pass the $this->envoys instance as the second argument
-    }
+    $this->getServer()->getCommandMap()->register("setenvoy", new SetEnvoyCommand($this));
 
     public function runEnvoyEvent(): void {
         foreach ($this->getServer()->getOnlinePlayers() as $players) {
