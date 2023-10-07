@@ -1,5 +1,4 @@
 <?php
-namespace bajan\Envoys;
 
 namespace bajan\Envoys;
 
@@ -31,3 +30,4 @@ class CountdownTask extends Task {
         }
     }
 }
+
