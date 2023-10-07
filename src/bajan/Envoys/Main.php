@@ -50,10 +50,14 @@ class Main extends PluginBase implements Listener {
     }
     
     public function runEnvoyEvent(): void {
+        $countdown = 10; // Countdown in seconds before chest spawns
+
         foreach ($this->getServer()->getOnlinePlayers() as $player) {
             $player->sendMessage(TF::AQUA . "WORLD EVENT");
-            $player->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
+            $player->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone! Spawning in $countdown seconds...");
         }
+
+        $this->getScheduler()->scheduleDelayedTask(new EnvoyTask($this), $countdown * 20);
 
         $envoyData = $this->getEnvoysConfig()->getAll();
         foreach ($envoyData as $envoy) {
