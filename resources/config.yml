@@ -1,0 +1,4 @@
+# Other existing configuration options
+
+# Define the interval in minutes
+envoy_interval: 60
