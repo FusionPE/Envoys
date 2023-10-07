@@ -63,7 +63,7 @@ class Main extends PluginBase implements Listener {
             continue;
         }
 
-        $tile = $targetWorld->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
+        $tile = $targetWorld->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
 
         if ($tile === null) {
             continue;
