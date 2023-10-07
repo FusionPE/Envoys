@@ -59,7 +59,7 @@ class Main extends PluginBase implements Listener {
         foreach ($envoyData as $envoy) {
             $coords = explode(":", $envoy["coords"]);
             $world = $this->getServer()->getWorldManager()->getWorldByName($envoy["world"]);
-            $tile = $world->getTile(new Vector3(intval($coords[0]), intval($coords[1]), intval($coords[2]));
+            $tile = $world->getTile(new Vector3(intval($coords[0]), intval($coords[1]), intval($coords[2])));
             $i = rand(3, 5);
 
             while ($i > 0) {
