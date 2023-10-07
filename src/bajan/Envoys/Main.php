@@ -24,7 +24,7 @@ class Main extends PluginBase implements Listener{
 	//minutes
 	public $spawntime = 60;
 
-	public function onEnable(){
+	public function onEnable(): void {
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->getServer()->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime*60*20);
 		@mkdir($this->getDataFolder());
@@ -36,7 +36,7 @@ class Main extends PluginBase implements Listener{
 		$this->items = new Config($this->getDataFolder()."Items.yml",Config::YAML);
 	}
 
-	public function runEnvoyEvent(){
+	public function runEnvoyEvent(): void {
 		foreach($this->getServer()->getOnlinePlayers() as $players){
 			$players->sendMessage(TF::AQUA."WORLD EVENT");
 			$players->sendMessage(TF::GREEN."Envoys are being spawned in the warzone!");
@@ -54,7 +54,7 @@ class Main extends PluginBase implements Listener{
 		}
 	}
 
-	public function setEnvoy(Player $sender){
+	public function setEnvoy(Player $sender): void {
 		$this->envoys->set($sender->x.":".$sender->y.":".$sender->z, $sender->getWorld()->getName());
 		$this->envoys->save();
 		$items = $this->items->get("Items");
