@@ -34,7 +34,6 @@ class Main extends PluginBase implements Listener {
         $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime * 60 * 20);
         @mkdir($this->getDataFolder());
         $this->saveResource("Items.yml");
-        $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
         $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
     }
 
