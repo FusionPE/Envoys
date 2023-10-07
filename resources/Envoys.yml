@@ -1,2 +1,5 @@
----
-...
+envoys:
+  "x1:y1:z1": world1
+  "x2:y2:z2": world2
+  "x3:y3:z3": world3
+  # This will erase by itself.
