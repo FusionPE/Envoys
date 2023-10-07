@@ -58,7 +58,7 @@ class Main extends PluginBase implements Listener {
 
             $chest = $tile;
 
-            if ($tile instanceof \pocketmine\inventory\Inventory) {
+            if ($tile instanceof \pocketmine\block\tile\Tile) {
     $itemObj = Item::get($item[0]);
     $itemObj->setDamage($item[1]);
     $itemObj->setCount($item[2]);
