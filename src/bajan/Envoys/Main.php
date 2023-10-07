@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace bajan\Envoys;
 
 use pocketmine\plugin\PluginBase;
@@ -11,6 +13,7 @@ use pocketmine\player\Player;
 use pocketmine\block\Block;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItem;
+use pocketmine\item\ItemTypeIds; // Added import for ItemTypeIds
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
@@ -49,7 +52,7 @@ class Main extends PluginBase implements Listener {
         $envoyData = $this->envoys->getAll();
         foreach ($envoyData as $data => $world) {
             $data = explode(":", $data);
-            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
             $i = rand(3, 5);
         
             while ($i > 0) {
@@ -57,11 +60,13 @@ class Main extends PluginBase implements Listener {
                 $item = $item["Items"][array_rand($item["Items"])];
                 $item = explode(":", $item);
 
-                if ($tile instanceof \pocketmine\block\tile\Chest) {
-                $itemId = (int) $item[0];
-                $itemObj = Item::getTypeId($itemId, $item[1]);
                 $chest = $tile;
-                $chest->getInventory()->addItem($itemObj);
+
+                if ($tile instanceof \pocketmine\block\tile\Chest) {
+                    $itemTypeId = (int) $item[0];
+                    $itemObj = new Item($itemTypeId, $item[1], $item[2]); // Use ItemTypeIds to create the item
+                    $chest = $tile;
+                    $chest->getInventory()->addItem($itemObj);
                 }
                 $i--;
             }
