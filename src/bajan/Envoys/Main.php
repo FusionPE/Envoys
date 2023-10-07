@@ -44,44 +44,48 @@ class Main extends PluginBase implements Listener {
     }
 
     public function runEnvoyEvent(): void {
-    $envoyData = $this->envoys->getAll();
+        $envoyData = $this->envoys->getAll();
 
-    foreach ($envoyData as $data => $world) {
-        $data = explode(":", $data);
-        $worldManager = $this->getServer()->getWorldManager();
-        $targetWorld = $worldManager->getWorldByName($world);
-
-        if ($targetWorld === null) {
-            continue;
+        foreach ($this->getServer()->getOnlinePlayers() as $player) {
+            
+            $player->sendMessage("Envoys are spawning in the PvP Warzone!");
         }
 
-        $x = intval($data[0]);
-        $y = intval($data[1]);
-        $z = intval($data[2]);
+        foreach ($envoyData as $data => $world) {
+            $data = explode(":", $data);
+            $targetWorld = $this->getServer()->getWorldManager()->getWorldByName($world);
 
-        $tile = TileFactory::getInstance()->createFromData($targetWorld, CompoundTag::create()
-            ->setInt(Tile::TAG_X, $x)
-            ->setInt(Tile::TAG_Y, $y)
-            ->setInt(Tile::TAG_Z, $z)
-        );
+            if ($targetWorld === null) {
+                continue;
+            }
 
-        if ($tile instanceof \pocketmine\block\tile\Chest) {
-            $i = rand(3, 5);
+            $x = intval($data[0]);
+            $y = intval($data[1]);
+            $z = intval($data[2]);
 
-            while ($i > 0) {
-                $itemsList = $this->items->get("Items");
+            $tile = TileFactory::getInstance()->createFromData($targetWorld, CompoundTag::create()
+                ->setInt(Tile::TAG_X, $x)
+                ->setInt(Tile::TAG_Y, $y)
+                ->setInt(Tile::TAG_Z, $z)
+            );
 
-                if (is_array($itemsList)) {
-                    foreach ($itemsList as $itemString) {
-                        $itemObj = StringToItemParser::getInstance()->parse($itemString);
+            if ($tile instanceof \pocketmine\block\tile\Chest) {
+                $i = rand(3, 5);
 
-                        if ($itemObj instanceof \pocketmine\item\Item) {
-                            $tile->getInventory()->addItem($itemObj);
+                while ($i > 0) {
+                    $itemsList = $this->items->get("Items");
+
+                    if (is_array($itemsList)) {
+                        foreach ($itemsList as $itemString) {
+                            $itemObj = StringToItemParser::getInstance()->parse($itemString);
+
+                            if ($itemObj instanceof \pocketmine\item\Item) {
+                                $tile->getInventory()->addItem($itemObj);
                             }
                         }
                     }
 
-                $i--;
+                    $i--;
                 }
             }
         }
