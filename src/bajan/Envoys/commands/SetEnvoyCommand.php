@@ -8,32 +8,27 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
+use bajan\Envoys\Main;
 
 class SetEnvoyCommand extends Command {
 
-    /** @var \bajan\Envoys\Main */
+    /** @var Main */
     private $plugin;
 
-    /** @var \pocketmine\utils\Config */
-    private $envoys;
-
-    public function __construct(\bajan\Envoys\Main $plugin, \pocketmine\utils\Config $envoys) {
+    public function __construct(Main $plugin) {
         parent::__construct("setenvoy", "Set an envoy");
         $this->plugin = $plugin;
-        $this->envoys = $envoys;
         $this->setPermission("envoys.cmd");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
         if ($sender instanceof Player) {
-            $coords = floor($sender->x) . ":" . floor($sender->y) . ":" . floor($sender->z) . ":" . $sender->getWorld()->getFolderName();
-
-            $envoyData = $this->envoys->getAll();
-            $envoyData["envoy" . (count($envoyData) + 1)] = $coords;
-            $this->envoys->setAll($envoyData);
-            $this->envoys->save();
-
-            $sender->sendMessage(TF::GREEN . "Envoy set at $coords!");
+            $success = $this->plugin->setEnvoy($sender);
+            if ($success) {
+                $sender->sendMessage(TF::GREEN . "Envoy set!");
+            } else {
+                $sender->sendMessage(TF::RED . "Error setting envoy.");
+            }
             return true;
         }
         return false;
