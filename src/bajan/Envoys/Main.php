@@ -59,7 +59,7 @@ class Main extends PluginBase implements Listener {
         $y = intval($data[1]);
         $z = intval($data[2]);
 
-        $chunk = $targetWorld->getChunkAtPosition(new Vector3($x, $y, $z));
+        $chunk = $targetWorld->getPosition(new Vector3($x, $y, $z));
 
         if (!$chunk->isGenerated()) {
             $chunk->generate(true);
