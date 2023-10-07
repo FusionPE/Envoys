@@ -8,11 +8,10 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
-use pocketmine\block\VanillaBlocks;
-use pocketmine\block\tile\Tile;
+use pocketmine\math\Vector3;
+use pocketmine\block\tile\Chest;
 use pocketmine\item\StringToItemParser;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\ListTag;
+use pocketmine\item\Item;
 use bajan\Envoys\Main;
 
 class SetEnvoyCommand extends Command {
@@ -33,11 +32,14 @@ class SetEnvoyCommand extends Command {
         }
 
         $position = $sender->getPosition();
-        $coords = floor($position->x) . ":" . floor($position->y) . ":" . floor($position->z);
+        $coords = new Vector3(floor($position->x), floor($position->y), floor($position->z));
         $worldName = $sender->getWorld()->getFolderName();
 
         $envoyData = $this->plugin->getEnvoysConfig()->getAll();
-        $envoyData[$coords] = $worldName;
+        $envoyData[] = [
+            "coords" => $coords,
+            "world" => $worldName
+        ];
         $this->plugin->getEnvoysConfig()->setAll($envoyData);
         $this->plugin->getEnvoysConfig()->save();
 
@@ -47,25 +49,12 @@ class SetEnvoyCommand extends Command {
             $itemString = $itemsList[array_rand($itemsList)];
             $itemObj = StringToItemParser::getInstance()->parse($itemString);
 
-            if ($itemObj instanceof \pocketmine\item\Item) {
+            if ($itemObj instanceof Item) {
                 $world = $sender->getWorld();
-                $nbt = CompoundTag::create()
-                    ->setTag("Items", new ListTag([]))
-                    ->setString("id", "Chest")
-                    ->setInt("x", floor($position->x))
-                    ->setInt("y", floor($position->y))
-                    ->setInt("z", floor($position->z));
-                $chest = new \pocketmine\block\tile\Chest($world, $nbt);
-                $world->setBlock($position->asVector3(), $chest);
-                $nbt = CompoundTag::create()
-                    ->setTag("Items", new ListTag([]))
-                    ->setString("id", "Chest")
-                    ->setInt("x", floor($position->x))
-                    ->setInt("y", floor($position->y))
-                    ->setInt("z", floor($position->z));
-                $chest = new \pocketmine\block\tile\Chest($sender->getWorld(), $nbt);
+                $nbt = Chest::createNBT($coords);
+                $chest = Chest::createTile($world, $nbt);
                 $world->addTile($chest);
-                $inv = $chest->getRealInventory();
+                $inv = $chest->getInventory();
                 $inv->addItem($itemObj);
 
                 $sender->sendMessage(TF::GREEN . "Envoy set at $coords in world $worldName!");
