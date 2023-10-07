@@ -8,7 +8,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\utils\Config;
 use pocketmine\player\Player;
-use pocketmine\block.Block;
+use pocketmine\block\Block;
 use pocketmine\item\Item;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\math\Vector3;
