@@ -9,7 +9,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\math\Vector3;
-use pocketmine\tile\Chest;
+use pocketmine\block\tile\Chest;
 use pocketmine\item\StringToItemParser;
 use pocketmine\item\Item;
 use bajan\Envoys\Main;
