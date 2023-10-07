@@ -57,11 +57,9 @@ class Main extends PluginBase implements Listener {
                 $item = $item["Items"][array_rand($item["Items"])];
                 $item = explode(":", $item);
 
-                $chest = $tile;
-
                 if ($tile instanceof \pocketmine\block\tile\Chest) {
                 $itemId = (int) $item[0];
-                $itemObj = new Item($itemId, $item[1], $item[2]);
+                $itemObj = Item::get($itemId, $item[1]);
                 $chest = $tile;
                 $chest->getInventory()->addItem($itemObj);
                 }
