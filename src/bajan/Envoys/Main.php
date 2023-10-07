@@ -86,7 +86,7 @@ class Main extends PluginBase implements Listener {
 
             if ($itemObj instanceof \pocketmine\item\Item) {
                 $world = $sender->getWorld();
-                $world->setBlock($position->asVector3(), Block::getId(BlockIds::CHEST));
+                $world->setBlock($position->asVector3(), Block::getTypeId(BlockIds::CHEST));
                 $nbt = CompoundTag::create()
                     ->setTag(new ListTag("Items", []))
                     ->setString("id", "Chest")
