@@ -1,22 +1,2 @@
-# Envoys.yml
-
-# This is an example Envoys configuration file.
-# You can add your own data as needed.
-
-# Envoys are defined as keys with coordinates (x:y:z) and associated worlds.
-# Each envoy location corresponds to a chest that will be created in the specified world.
-
-# Example envoy location:
-# "x:y:z": "world_name"
-
-# Envoys:
-#   "x1:y1:z1": "world1"
-#   "x2:y2:z2": "world2"
-
-# You can define more envoy locations as needed.
-
-# Make sure to maintain valid YAML syntax.
-
-Envoys:
-  "100:50:100": "world1"
-  "200:70:200": "world2"
+---
+...
