@@ -25,16 +25,16 @@ class Main extends PluginBase implements Listener{
 	public $spawntime = 60;
 
 	public function onEnable(): void {
-		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		$this->getServer()->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime*60*20);
-		@mkdir($this->getDataFolder());
-		$this->saveResource("Config.yml");
-		$this->saveResource("Envoys.yml");
-		$this->saveResource("Items.yml");
-		$this->cfg = new Config($this->getDataFolder()."Config.yml",Config::YAML);
-		$this->envoys = new Config($this->getDataFolder()."Envoys.yml",Config::YAML);
-		$this->items = new Config($this->getDataFolder()."Items.yml",Config::YAML);
-	}
+    $this->getServer()->getPluginManager()->registerEvents($this, $this);
+    $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime * 60 * 20);
+    @mkdir($this->getDataFolder());
+    $this->saveResource("Config.yml");
+    $this->saveResource("Envoys.yml");
+    $this->saveResource("Items.yml");
+    $this->cfg = new Config($this->getDataFolder() . "Config.yml", Config::YAML);
+    $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
+    $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
+    }
 
 	public function runEnvoyEvent(): void {
 		foreach($this->getServer()->getOnlinePlayers() as $players){
