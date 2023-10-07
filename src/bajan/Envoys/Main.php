@@ -84,16 +84,23 @@ class Main extends PluginBase implements Listener {
 
             if ($itemObj instanceof \pocketmine\item\Item) {
                 $world = $sender->getWorld();
-                $world->setBlock($position->asVector3(), VanillaBlocks::CHEST()->asBlock());
+                $nbt = CompoundTag::create()
+                ->setTag("Items", new ListTag([]))
+                ->setString("id", "Chest")
+                ->setInt("x", floor($position->x))
+                ->setInt("y", floor($position->y))
+                ->setInt("z", floor($position->z));
+                $chest = new \pocketmine\block\tile\Chest($world, $nbt);
+                $world->setBlock($position->asVector3(), $chest);
                 $nbt = CompoundTag::create()
                     ->setTag("Items", new ListTag([]))
                     ->setString("id", "Chest")
                     ->setInt("x", floor($position->x))
                     ->setInt("y", floor($position->y))
                     ->setInt("z", floor($position->z));
-                $chest = Chest::createChest($sender->getWorld(), $nbt);
+                $chest = new \pocketmine\block\tile\Chest($sender->getWorld(), $nbt);
                 $world->addTile($chest);
-                $inv = $chest->getInventory();
+                $inv = $chest->getRealInventory();
                 $inv->addItem($itemObj);
                 $sender->sendMessage(TF::GREEN . "Envoy set!");
                 return true;
