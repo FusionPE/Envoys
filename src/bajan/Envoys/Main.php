@@ -38,7 +38,7 @@ class Main extends PluginBase implements Listener {
         $this->saveResource("Envoys.yml");
         $this->saveResource("Items.yml");
         $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
-        $this->items = a new Config($this->getDataFolder() . "Items.yml", Config::YAML);
+        $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
     }
 
     public function runEnvoyEvent(): void {
