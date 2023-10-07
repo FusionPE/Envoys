@@ -1,4 +1,0 @@
-# Envoys Configuration
-envoy_interval: 60
-countdown_enabled: true
-countdown_time: 10 
