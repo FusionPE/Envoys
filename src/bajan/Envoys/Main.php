@@ -7,8 +7,9 @@ use pocketmine\event\Listener;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\utils\Config;
-use pocketmine\Player;
-use pocketmine\block\Block;
+use pocketmine\player\Player;
+use pocketmine\block\VanillaBlocks;
+use pocketmine\item\StringToItemParser;
 use pocketmine\item\Item;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\math\Vector3;
@@ -17,14 +18,14 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
-use pocketmine\tile\Tile;
+use pocketmine\block\tile\Tile;
 
 class Main extends PluginBase implements Listener{
 
 	//minutes
 	public $spawntime = 5;
 
-	public function onEnable(){
+	public function onEnable():void {
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime*60*20);
 		@mkdir($this->getDataFolder());
@@ -41,9 +42,9 @@ class Main extends PluginBase implements Listener{
 			$players->sendMessage(TF::AQUA."WORLD EVENT");
 			$players->sendMessage(TF::GREEN."Envoys are being spawned in the warzone!");
 		}
-		foreach($this->envoys as $data => $level){
+		foreach($this->envoys as $data => $world){
 			$data = explode(":",$data);
-			$tile = $this->getServer()->getLevelByName($level)->getTile(new Vector3(intval($data[0]),intval($data[1]),intval($data[2])));
+			$tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
 			$i = rand(3,5);
 			while($i > 0){
 				$item = $this->items[array_rand($this->items)];
@@ -60,8 +61,8 @@ class Main extends PluginBase implements Listener{
 		$items = $this->items->get("Items");
 		$item = $items[array_rand($items)];
 		$values = explode(":", $item);
-		$level = $sender->getLevel();
-		$level->setBlock($sender->getPosition()->asVector3(), Block::get(54));
+		$world = $sender->getWorld();
+		$world->setBlock($sender->getPosition()->asVector3(), Block::get(54));
 		$nbt = new CompoundTag(" ", [
 			new ListTag("Items", []),
 			new StringTag("id", Tile::CHEST),
