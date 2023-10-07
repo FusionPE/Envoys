@@ -48,7 +48,7 @@ class Main extends PluginBase implements Listener {
         $envoyData = $this->envoys->getAll();
         foreach ($envoyData as $data => $world) {
             $data = explode(":", $data);
-            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
             $i = rand(3, 5);
 
             while ($i > 0) {
@@ -74,8 +74,14 @@ class Main extends PluginBase implements Listener {
 
     public function setEnvoy(Player $sender) {
         $position = $sender->getPosition();
-        $this->envoys->set(floor($position->x) . ":" . floor($position->y) . ":" . floor($position->z), $sender->getWorld()->getFolderName());
+        $coords = floor($position->x) . ":" . floor($position->y) . ":" . floor($position->z);
+        $worldName = $sender->getWorld()->getFolderName();
+
+        $envoyData = $this->envoys->getAll();
+        $envoyData[$coords] = $worldName;
+        $this->envoys->setAll($envoyData);
         $this->envoys->save();
+
         $itemsList = $this->items->get("Items");
 
         if (is_array($itemsList)) {
@@ -102,7 +108,7 @@ class Main extends PluginBase implements Listener {
                 $world->addTile($chest);
                 $inv = $chest->getRealInventory();
                 $inv->addItem($itemObj);
-                $sender->sendMessage(TF::GREEN . "Envoy set!");
+                $sender->sendMessage(TF::GREEN . "Envoy set at $coords in world $worldName!");
                 return true;
             }
         }
