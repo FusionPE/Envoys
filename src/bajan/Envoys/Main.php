@@ -11,17 +11,12 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
-use pocketmine\command\CommandSender;
-use pocketmine\command\Command;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\player\Player;
 use pocketmine\math\Vector3;
 
 class Main extends PluginBase implements Listener {
-
-    // minutes
-    public $spawntime = 60;
 
     /** @var Config */
     private $envoys;
@@ -30,120 +25,65 @@ class Main extends PluginBase implements Listener {
     private $items;
 
     public function onEnable(): void {
-    $this->getServer()->getPluginManager()->registerEvents($this, $this);
-    $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime * 60 * 20);
-    
-    @mkdir($this->getDataFolder());
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
-    $envoysFile = $this->getDataFolder() . "Envoys.yml";
-    if (!file_exists($envoysFile)) {
-        $envoysData = ["dummy" => "data"];
-        file_put_contents($envoysFile, yaml_emit($envoysData, YAML_UTF8_ENCODING));
-    }
-    
-    $this->envoys = new Config($envoysFile, Config::YAML);
+        // Read the interval from the Envoys.yml file
+        $envoysFile = $this->getDataFolder() . "Envoys.yml";
+        $config = new Config($envoysFile, Config::YAML);
+        $spawntime = (int)$config->get("interval", 60);
 
-    $this->saveResource("Items.yml");
-    $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
+        $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $spawntime * 60 * 20);
+        
+        @mkdir($this->getDataFolder());
+
+        $this->envoys = new Config($envoysFile, Config::YAML);
+
+        $this->saveResource("Items.yml");
+        $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
     }
 
     public function runEnvoyEvent(): void {
-    foreach ($this->getServer()->getOnlinePlayers() as $player) {
-        $player->sendMessage(TF::AQUA . "WORLD EVENT");
-        $player->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
-    }
-
-    $envoyData = $this->envoys->getAll();
-    foreach ($envoyData as $data => $world) {
-        $data = explode(":", $data);
-        $worldManager = $this->getServer()->getWorldManager();
-        $targetWorld = $worldManager->getWorldByName($world);
-
-        if ($targetWorld === null) {
-            continue;
+        foreach ($this->getServer()->getOnlinePlayers() as $player) {
+            $player->sendMessage(TF::AQUA . "WORLD EVENT");
+            $player->sendMessage(TF::GREEN . "Envoys are being spawned in the warzone!");
         }
 
-        $tile = $targetWorld->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+        $envoyData = $this->envoys->getAll();
+        foreach ($envoyData as $data => $world) {
+            $data = explode(":", $data);
+            $worldManager = $this->getServer()->getWorldManager();
+            $targetWorld = $worldManager->getWorldByName($world);
 
-        if ($tile === null) {
-            continue;
-        }
+            if ($targetWorld === null) {
+                continue;
+            }
 
-        $i = rand(3, 5);
+            $tile = $targetWorld->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
 
-        while ($i > 0) {
-            $itemsList = $this->items->get("Items");
+            if ($tile === null) {
+                continue;
+            }
 
-            if (is_array($itemsList)) {
-                foreach ($itemsList as $itemString) {
-                    $itemObj = StringToItemParser::getInstance()->parse($itemString);
+            $i = rand(3, 5);
 
-                    if ($itemObj instanceof \pocketmine\item\Item) {
-                        if ($tile instanceof \pocketmine\block\tile\Chest) {
-                            $chest = $tile;
-                            $chest->getInventory()->addItem($itemObj);
+            while ($i > 0) {
+                $itemsList = $this->items->get("Items");
+
+                if (is_array($itemsList)) {
+                    foreach ($itemsList as $itemString) {
+                        $itemObj = StringToItemParser::getInstance()->parse($itemString);
+
+                        if ($itemObj instanceof \pocketmine\item\Item) {
+                            if ($tile instanceof \pocketmine\block\tile\Chest) {
+                                $chest = $tile;
+                                $chest->getInventory()->addItem($itemObj);
                             }
                         }
                     }
                 }
 
-            $i--;
+                $i--;
             }
         }
-    }
-
-    public function setEnvoy(Player $sender) {
-    $position = $sender->getPosition();
-    
-    if ($this->envoys === null) {
-        $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
-        }
-
-        $this->envoys->set(floor($position->x) . ":" . floor($position->y) . ":" . floor($position->z), $sender->getWorld()->getFolderName());
-        $this->envoys->save();
-        $itemsList = $this->items->get("Items");
-
-        if (is_array($itemsList)) {
-            $itemString = $itemsList[array_rand($itemsList)];
-            $itemObj = StringToItemParser::getInstance()->parse($itemString);
-
-            if ($itemObj instanceof \pocketmine\item\Item) {
-                $world = $sender->getWorld();
-                $nbt = CompoundTag::create()
-                ->setTag("Items", new ListTag([]))
-                ->setString("id", "Chest")
-                ->setInt("x", floor($position->x))
-                ->setInt("y", floor($position->y))
-                ->setInt("z", floor($position->z));
-                $chest = new \pocketmine\block\tile\Chest($world, $nbt);
-                $world->setBlock($position->asVector3(), $chest);
-                $nbt = CompoundTag::create()
-                    ->setTag("Items", new ListTag([]))
-                    ->setString("id", "Chest")
-                    ->setInt("x", floor($position->x))
-                    ->setInt("y", floor($position->y))
-                    ->setInt("z", floor($position->z));
-                $chest = new \pocketmine\block\tile\Chest($sender->getWorld(), $nbt);
-                $world->addTile($chest);
-                $inv = $chest->getRealInventory();
-                $inv->addItem($itemObj);
-                $sender->sendMessage(TF::GREEN . "Envoy set!");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool {
-        switch ($cmd->getName()) {
-            case "setenvoy":
-                if (!$sender->hasPermission("envoy.set")) {
-                    $sender->sendMessage(TF::RED . "You do not have the required permission");
-                    return false;
-                }
-                $this->setEnvoy($sender);
-                return true;
-        }
-        return false;
     }
 }
