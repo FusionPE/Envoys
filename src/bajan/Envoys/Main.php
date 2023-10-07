@@ -11,8 +11,6 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
-use pocketmine\command\CommandSender;
-use pocketmine\command\Command;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\player\Player;
@@ -37,7 +35,7 @@ class Main extends PluginBase implements Listener {
         $this->saveResource("Items.yml");
         $this->envoys = new Config($this->getDataFolder() . "Envoys.yml", Config::YAML);
         $this->items = new Config($this->getDataFolder() . "Items.yml", Config::YAML);
-        $this->setPermission("envoys.cmd");
+        $this->getServer()->getCommandMap()->register("setenvoy", new SetEnvoyCommand($this));
     }
 
     public function runEnvoyEvent(): void {
@@ -49,7 +47,7 @@ class Main extends PluginBase implements Listener {
         $envoyData = $this->envoys->getAll();
         foreach ($envoyData as $data => $world) {
             $data = explode(":", $data);
-            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
             $i = rand(3, 5);
 
             while ($i > 0) {
@@ -71,55 +69,5 @@ class Main extends PluginBase implements Listener {
                 $i--;
             }
         }
-    }
-
-    public function setEnvoy(Player $sender) {
-        $position = $sender->getPosition();
-        $this->envoys->set(floor($position->x) . ":" . floor($position->y) . ":" . floor($position->z), $sender->getWorld()->getFolderName());
-        $this->envoys->save();
-        $itemsList = $this->items->get("Items");
-
-        if (is_array($itemsList)) {
-            $itemString = $itemsList[array_rand($itemsList)];
-            $itemObj = StringToItemParser::getInstance()->parse($itemString);
-
-            if ($itemObj instanceof \pocketmine\item\Item) {
-                $world = $sender->getWorld();
-                $nbt = CompoundTag::create()
-                ->setTag("Items", new ListTag([]))
-                ->setString("id", "Chest")
-                ->setInt("x", floor($position->x))
-                ->setInt("y", floor($position->y))
-                ->setInt("z", floor($position->z));
-                $chest = new \pocketmine\block\tile\Chest($world, $nbt);
-                $world->setBlock($position->asVector3(), $chest);
-                $nbt = CompoundTag::create()
-                    ->setTag("Items", new ListTag([]))
-                    ->setString("id", "Chest")
-                    ->setInt("x", floor($position->x))
-                    ->setInt("y", floor($position->y))
-                    ->setInt("z", floor($position->z));
-                $chest = new \pocketmine\block\tile\Chest($sender->getWorld(), $nbt);
-                $world->addTile($chest);
-                $inv = $chest->getRealInventory();
-                $inv->addItem($itemObj);
-                $sender->sendMessage(TF::GREEN . "Envoy set!");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool {
-        switch ($cmd->getName()) {
-            case "setenvoy":
-                if (!$sender->hasPermission("envoy.set")) {
-                    $sender->sendMessage(TF::RED . "You do not have the required permission");
-                    return false;
-                }
-                $this->setEnvoy($sender);
-                return true;
-        }
-        return false;
     }
 }
