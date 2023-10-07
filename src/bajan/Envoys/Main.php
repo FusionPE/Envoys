@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace bajan\Envoys;
 
 use pocketmine\block\VanillaBlocks;
+use pocketmine\block\tile\TileFactory;
 use pocketmine\block\tile\Tile;
 use pocketmine\item\StringToItemParser;
 use pocketmine\nbt\tag\CompoundTag;
