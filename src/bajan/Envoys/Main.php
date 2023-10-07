@@ -30,6 +30,9 @@ class Main extends PluginBase implements Listener {
 
     public function onEnable(): void {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        $this->saveResource("config.yml");
+        $config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+        $this->spawntime = $config->get("envoy_interval", 60);
         $this->getScheduler()->scheduleRepeatingTask(new EnvoyTask($this), $this->spawntime * 60 * 20);
         @mkdir($this->getDataFolder());
         $this->saveResource("Items.yml");
@@ -55,7 +58,7 @@ class Main extends PluginBase implements Listener {
         $envoyData = $this->getEnvoysConfig()->getAll();
         foreach ($envoyData as $data => $world) {
             $data = explode(":", $data);
-            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2])));
+            $tile = $this->getServer()->getWorldManager()->getWorldByName($world)->getTile(new Vector3(intval($data[0]), intval($data[1]), intval($data[2]));
             $i = rand(3, 5);
 
             while ($i > 0) {
