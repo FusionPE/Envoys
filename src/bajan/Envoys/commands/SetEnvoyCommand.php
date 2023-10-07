@@ -51,10 +51,12 @@ class SetEnvoyCommand extends Command {
 
             if ($itemObj instanceof Item) {
                 $world = $sender->getWorld();
-                $tile = new Chest($world->getChunk($coords->x >> 4, $coords->z >> 4), $nbt = null);
-                $tile->x = $coords->x;
-                $tile->y = $coords->y;
-                $tile->z = $coords->z;
+                $tile = $world->getTile($coords);
+                if (!$tile instanceof Chest) {
+                    $tile = new Chest();
+                    $tile->setPosition($coords);
+                    $world->addTile($tile);
+                }
 
                 $inv = $tile->getInventory();
                 $inv->addItem($itemObj);
