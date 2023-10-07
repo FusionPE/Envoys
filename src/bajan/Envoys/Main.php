@@ -78,13 +78,13 @@ class Main extends PluginBase implements Listener {
         $this->envoys->set($sender->x.":".$sender->y.":".$sender->z, $sender->getWorld()->getName());
         $this->envoys->save();
         $itemsList = $this->items->get("Items");
-        $item = $itemsList[array_rand($itemsList)];
-        [$itemTypeId, $itemMeta, $count] = array_map('intval', explode(":", $item));
+        $itemString = $itemsList[array_rand($itemsList)];
+        [$itemTypeId, $itemMeta, $count] = array_map('intval', explode(":", $itemString));
         $world = $sender->getWorld();
         $world->setBlock($sender->getPosition()->asVector3(), Block::get(54));
         $nbt = CompoundTag::create()
             ->setTag(new ListTag("Items", []))
-            ->setString("id", Tile::CHEST)
+            ->setString("id", "Chest")
             ->setInt("x", $sender->x)
             ->setInt("y", $sender->y)
             ->setInt("z", $sender->z);
