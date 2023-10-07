@@ -19,16 +19,19 @@ class SetEnvoyCommand extends Command {
         $this->setPermission("envoys.cmd");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
-        if ($sender->hasPermission("envoys.cmd")) {
-            if ($this->plugin->setEnvoy($sender)) {
-                $sender->sendMessage(TF::GREEN . "Envoy set!");
-            } else {
-                $sender->sendMessage(TF::RED . "Failed to set the envoy.");
-            }
-        } else {
-            $sender->sendMessage(TF::RED . "You do not have the required permission");
-        }
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
+    if ($command->getName() === "setconvoy" && $sender instanceof Player) {
+        $coords = floor($sender->x) . ":" . floor($sender->y) . ":" . floor($sender->z) . ":" . $sender->getWorld()->getFolderName();
+
+        $envoyData = $this->envoys->getAll();
+        $envoyData["envoy" . count($envoyData) + 1] = $coords;
+        $this->envoys->setAll($envoyData);
+        $this->envoys->save();
+
+        $sender->sendMessage(TF::GREEN . "Envoy set at $coords!");
         return true;
+        }
+    return false;
     }
+
 }
